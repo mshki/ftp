@@ -25,12 +25,12 @@ class DLL {
 		}
 		void Add(const char* data) {
 			Node* newNode = new Node(data);
-			if (head == nullptr) head = newNode;
+
+			if (head == nullptr) {head = newNode; tail = head;}
 			else {
-				Node* curr = head;
-				while (curr->next != nullptr) curr = curr->next;
-				curr->next = newNode;
-				newNode->prev = curr;
+				tail->next = newNode;
+				newNode->prev = tail;
+				tail = newNode;
 			}
 			length++;
 		}
@@ -44,22 +44,22 @@ class DLL {
 		}
 
 		void Remove(int i) {
-			if (head == nullptr || i < 0) return;
+			if (head == nullptr || i < 0 || i >= length) return;
 
 			Node* curr = head;
-			int cnt = 0;
+			for (int j = 0; j < i; j++) curr = curr->next;
 
-			while (curr != nullptr && cnt < i) {
-				curr = curr->next;
-				cnt++;
+			if (curr == head) {
+				head = curr->next;
+				if (head != nullptr) head->prev = nullptr;
+				else tail = nullptr;
+			} else if (curr == tail) {
+				tail = curr->prev;
+				tail->next = nullptr;
+			} else {
+				curr->prev->next = curr->next;
+				curr->next->prev = curr->prev;
 			}
-
-			if (curr == nullptr) return;
-			
-			if (curr->prev != nullptr) curr->prev->next = curr->next;
-			else head = curr->next;
-
-			if (curr->next != nullptr) curr->next->prev = curr->prev;
 
 			length--;
 		}
@@ -78,7 +78,7 @@ int main() {
     list.Add("test.");
 
     // Print the list
-    std::cout << "Initial list: ";
+    std::cout << "List: ";
     list.Print();
 
     // Remove an element
