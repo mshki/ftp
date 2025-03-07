@@ -34,7 +34,6 @@ class DLL {
 				tail->next = newNode;
 				newNode->prev = tail;
 				tail = newNode;
-				Node* curr = head;
 			}
 			length++;
 		}
